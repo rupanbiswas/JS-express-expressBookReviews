@@ -15,18 +15,18 @@ public_users.post("/register", (req, res) => {
   });
 
   if (existingUsers.length > 0) {
-    res.send(500).send("user already exists");
+    res.status(500).send("user already exists");
+  } else {
+    users.push({ userName, password });
+
+    res.status(300).send("successfully registered");
   }
-
-  books.push({ userName, password });
-
-  return res.status(300).json("successfully registered");
 });
 
 // Get the book list available in the shop
 public_users.get("/", function (req, res) {
   //Write your code here
-  return res.status(300).json(JSON.stringify(books));
+  return res.status(300).json(books);
 });
 
 // Get book details based on ISBN
@@ -34,18 +34,18 @@ public_users.get("/isbn/:isbn", function (req, res) {
   //Write your code here
   const isbn = req.params.isbn;
 
-  return res.status(300).json(JSON.stringify(books[isbn]));
+  return res.status(300).json(books[isbn]);
 });
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
   //Write your code here
   const author = req.params.author;
-  const asArray = Object.entries(obj);
+  const asArray = Object.entries(books);
   const filtered = asArray.filter(([key, value]) => value.author === author);
   const justStrings = Object.fromEntries(filtered);
 
-  return res.status(300).json(JSON.stringify(justStrings));
+  return res.status(300).json(justStrings);
 });
 9;
 
@@ -53,18 +53,18 @@ public_users.get("/author/:author", function (req, res) {
 public_users.get("/title/:title", function (req, res) {
   //Write your code here
   const title = req.params.title;
-  const asArray = Object.entries(obj);
+  const asArray = Object.entries(books);
   const filtered = asArray.filter(([key, value]) =>
     value.title?.toLowerCase().includes(title.toLocaleLowerCase())
   );
   const justStrings = Object.fromEntries(filtered);
-  return res.status(300).json(JSON.stringify(justStrings));
+  return res.status(300).json(justStrings);
 });
 
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   //Write your code here
-  return res.status(300).json(books[isbn].reviews);
+  return res.status(300).json(books[req.params.isbn].reviews);
 });
 
 const axios = require("axios");
